@@ -192,6 +192,6 @@ This approach mirrors standard practice in serious scientific and industrial mod
 ---
 
 ## Next Steps
-Subsequent baselines introduce **controlled chemical context** (e.g. burn rate index) and, later, regime-aware and multi-cartridge modeling.
+Future models will explicitly address cross-cartridge heterogeneity and interaction effects using regularization and regime-aware feature design.
 
 See the main project documentation for current modeling status.
