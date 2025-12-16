@@ -1,13 +1,11 @@
 # Handloading Muzzle Velocity Predictor
 
-Personal machine learning project to predict firearm muzzle velocities using features like cartridge, powder charge, bullet weight, barrel length, etc.
+Personal machine learning project focused on modeling firearm muzzle velocity using publicly available handloading data. The system leverages physically meaningful features such as cartridge type, bullet weight, propellant charge, burn rate characteristics, and barrel length to study how predictive behavior evolves as domain context is introduced.
 
+Early model baselines were intentionally constrained to single-cartridge datasets in order to preserve interpretability and isolate internal ballistic effects. Subsequent iterations expand across multiple cartridges, introducing geometric and behavioral diversity and evaluating the model’s ability to generalize across physically distinct ballistic regimes.
 
+Data is ethically sourced from publicly available manufacturer load data. Limited anecdotal data from firearm forums is included for exploratory analysis but does not materially influence model training due to the dominance of manufacturer-supplied datasets.
 
-Data ethically sourced from publically-available manufacturer load data. Individual loading data from Reddit posts and firearm forums is also being obtained but does not significantly contribute to the training dataset due to the overwhelming amount of manufacturer-supplied data.
+Models are implemented using scikit-learn. Initial baselines utilized ordinary least squares (OLS) regression, with current iterations incorporating regularized regression (Ridge) as feature dimensionality increases.
 
-Uses scikit-learn for regression models. Early baselines used OLS regression. Currently utilizing Ridge.
-
-In progress: Dataset compilation, feature engineering, model training. Please refer to README within the baseline directory for an up-to-date progress report of the project.
-
-Non-commercial, educational use only. Feel free to reach out with any questions.
+This project is non-commercial and intended for educational and research-oriented exploration. Detailed model evolution, diagnostics, and ongoing progress notes are documented within the baseline subdirectory.
