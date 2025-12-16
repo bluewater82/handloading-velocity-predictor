@@ -9,3 +9,5 @@ Data is ethically sourced from publicly available manufacturer load data. Limite
 Models are implemented using scikit-learn. Initial baselines utilized ordinary least squares (OLS) regression, with current iterations incorporating regularized regression (Ridge) as feature dimensionality increases.
 
 This project is non-commercial and intended for educational and research-oriented exploration. Detailed model evolution, diagnostics, and ongoing progress notes are documented within the baseline subdirectory.
+
+*This repository emphasizes model behavior, interpretability, and responsible extrapolation over raw metric optimization.*
