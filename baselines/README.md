@@ -102,7 +102,7 @@ Test whether the burn rate index will further improve prediction accuracy of the
 velocity_fps ~ charge_weight + bullet_weight + burn_rate_index
 
 ### Interpretation notes
-Unlike Model3's results which were confounded by adding the limited barrel length, Model4 showed another significant improvement in lowering MAE.
+Unlike Model2's results which were confounded by adding the limited barrel length, Model4 showed another significant improvement in lowering MAE.
 - Model's MAE dropped to 51.51ft/s, only 27% of the floor MAE of 191.95ft/s, showing that comparing burn rates provides a strong signal that meaningfully affects the accuracy of the model.
 - Residuals are still structureless and non-biased, providing comfort that the model is still behaving
 
@@ -137,7 +137,7 @@ At this stage I feel that the simple linear regression models have reached their
 This will be the first model to use Ridge regression as opposed to OLS regression. Previous baseline models handled the core feature sets well but predictive accuracy stalled once we tried stepping away from that core set. These next few models will explore how Ridge handles the predictions.
 
 ### Scope
-- Retaining same feature set as previous baseline model (04) to compare mean absolute error margins and residuals between OLS and Ridge before moving on to a more expansive training of the Ridge models.
+- Retaining same feature set as previous baseline model (Model4) to compare mean absolute error margins and residuals between OLS and Ridge before moving on to a more expansive training of the Ridge models.
 - Still limiting this baseline training data to just one cartridge (.308 Winchester).
 - This baseline is mostly a sanity check to make sure Ridge is behaving and picking up exactly where the OLS regression models left off. Given that the training data is identical, results are expected to be virtually identical to baseline_04.
 
