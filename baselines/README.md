@@ -21,7 +21,7 @@ Once validated, these baselines are **frozen** and retained as part of the proje
 ### Purpose
 Establish a **minimum performance floor** by predicting the same value for every observation.
 
-### Model
+### Model0
 - Prediction: mean muzzle velocity of the dataset
 - No features used
 
@@ -42,7 +42,7 @@ Verify that the dataset obeys **basic internal ballistics physics** within a sin
 - Cartridge-specific (e.g. .300 Blackout)
 - Minimal feature set
 
-### Model2
+### Model1
 velocity_fps ~ charge_weight + bullet_weight
 
 
@@ -72,7 +72,7 @@ Test whether **barrel length** behaves sensibly once basic mass and charge effec
 - Same cartridge as Baseline 01
 - Subset of data where barrel length is known
 
-### Model3
+### Model2
 velocity_fps ~ charge_weight + bullet_weight + barrel_length
 
 
@@ -98,7 +98,7 @@ Test whether the burn rate index will further improve prediction accuracy of the
 - Abandoning the barrel length feature due to insufficient variability with the cartridge
 - Including burn rate ranking scheme to set of core features. The values are positional rankings (ordinal) and this test is meant to see how the model will interpret the ordinal values as opposed to actual measured units such as the mass for the bullet_weight and charge_weight features.
 
-### Model4
+### Model3
 velocity_fps ~ charge_weight + bullet_weight + burn_rate_index
 
 ### Interpretation notes
@@ -119,13 +119,62 @@ This baseline will test to see if including the cartridge's overall length (COAL
 - Retaining the same features as Model4 from the previous baseline test
 - Expanded feature vector to include COAL measurements
 
-### Model5
+### Model4
 velocity_fps ~ charge_weight + bullet_weight + burn_rate_index + coal
 
 ### Interpretation notes
 This model yielded interesting results that I did not expect. The COAL feature appeared at face-value to have a meaningful weight but provided virtually zero influence on the model's predictions. I assume this is due to the variations in COAL values being of extremely small magnitude - on the order of hundredths/thousandths of an inch.
 
-At this stage I feel that the simple linear regression models have reached their limitations. The next major step will be to move to using Ridge models, but before I do I will rerun all previous exploratory base models with train_test_split. Those should be nearly identical to these previous baselines so I will not be adding notes here in the README unless I see something meaningfully different. I will still upload all new train/test baselines alongside their corresponding notebooks, marked a
+At this stage I feel that the simple linear regression models have reached their limitations. The next major step will be to move to using Ridge models, but before I do I will rerun all previous exploratory base models with train_test_split. Those should be nearly identical to these previous baselines so I will not be adding notes here in the README unless I see something meaningfully different. I will still upload all new train/test baselines alongside their corresponding notebooks, marked as "_v2" in their file names for easy identification.
+
+---
+
+## Baseline 05 - Introduction of Ridge regression model
+
+**Notebook:** `baseline_05_ridge.ipynb`
+
+### Purpose
+This will be the first model to use Ridge regression as opposed to OLS regression. Previous baseline models handled the core feature sets well but predictive accuracy stalled once we tried stepping away from that core set. These next few models will explore how Ridge handles the predictions.
+
+### Scope
+- Retaining same feature set as previous baseline model (04) to compare mean absolute error margins and residuals between OLS and Ridge before moving on to a more expansive training of the Ridge models.
+- Still limiting this baseline training data to just one cartridge (.308 Winchester).
+- This baseline is mostly a sanity check to make sure Ridge is behaving and picking up exactly where the OLS regression models left off. Given that the training data is identical, results are expected to be virtually identical to baseline_04.
+
+### Model5
+velocity_fps ~ charge_weight + bullet_weight + burn_rate_index + coal
+
+### Interpretation notes
+As expected, the introduction of Ridge regression did not yield any meaningfully-different results. Floor MAE remaining identical (190.84ft/s) and the model's predictive MAE was virtually the same as Model4's (51.18ft/s vs 51.21ft/s, respectively).
+With this sanity check passed, we will start widenening the scope of the training data for future Ridge models.
+
+---
+
+## Baseline 06 - Training the model with categorical features
+
+**Notebook:** `baseline_06_cats.ipynb`
+
+### Purpose
+- This model will use OneHotEncoding on a single categorical feature (cartridge type) to assess how such a feature impacts prediction behavior. Up until now, all training features were numerical. This addition of categorical features, even if it is just a single feature for this baseline, marks a definitive evolutionary step in the system's development.
+
+### Scope
+- Retaining core features (same as those used in previous baseline) and adding catridge designation as our new categorical feature.
+- Full existing dataset will be evaluated for the first time. Previous baselines were limited to a single cartridge (.308 Winchester) in order to preserve physical identifiability of feature effects and avoid confouding introduced by the geometric and behavioral differences betwee cartridge types. This model will be assessing all cartridges that are currently existing in the curated dataset (.223 Remington, .243 Winchester, .260 Remington, .300 Blackout, .308 Winchester, 6.5 Creedmoor, 7mm Remington Magnum, .270 Winchester, .270 Weatherby Magnum, and .260 Remington).
+
+### Model6
+velocity_fps ~ cartridge + charge_weight + bullet_weight + burn_rate_index + coal
+
+### Interpretation notes
+- Our floor mean absolute error increased from 190ft/s to 269ft/s. This change in floor mean was to be expected since we introduced a significantly larger and wider set of velocities that spanned both subsonic and supersonic values. Until the current dataset grows with new cartridge loads, this will now be our new standard floor MAE.
+- The model's MAE increased for the first time in the training models (51ft/s to 86ft/s). At first I believed this to be due to a breaking of the model's ability to meaningfully interpret the data and that the addition of our first categorical feature made the predictions worse instead of better.
+- Secondary review of the results led to the realization that:
+  - Our previous floor-to-model MAE reduction was 190ft/s -> 51ft/s, an improvement of roughly 139ft/s from ignorance
+  - Our new floor-to-model reduction is 269ft/s -> 86ft/s, which is an improvement of roughly 183ft/s from ignorance
+  - Despite the higher model MAE, the numbers actually show that the model *is still improving its predictive accuracy over ignorance.* The higher number is simply because ignorance error was raised when we introduced a significantly larger dataset with a wider variance in data.
+  - Additionally, residuals are still behaving:
+    - No obvious heteroscedastic explosion
+    - Still no systematic bias
+-Conclusion: *The model is still improving at a meaningful rate* I am satisfied enough with these results to continue introducing the next categorical features to see if they can continue to improve accuracy.
 
 ---
 
