@@ -171,10 +171,44 @@ velocity_fps ~ cartridge + charge_weight + bullet_weight + burn_rate_index + coa
   - Our previous floor-to-model MAE reduction was 190ft/s -> 51ft/s, an improvement of roughly 139ft/s from ignorance
   - Our new floor-to-model reduction is 269ft/s -> 86ft/s, which is an improvement of roughly 183ft/s from ignorance
   - Despite the higher model MAE, the numbers actually show that the model *is still improving its predictive accuracy over ignorance.* The higher number is simply because ignorance error was raised when we introduced a significantly larger dataset with a wider variance in data.
-  - Additionally, residuals are still behaving:
-    - No obvious heteroscedastic explosion
-    - Still no systematic bias
--Conclusion: *The model is still improving at a meaningful rate* I am satisfied enough with these results to continue introducing the next categorical features to see if they can continue to improve accuracy.
+- More detailed review of the results exposed an issue:
+  - Residual plots for the first time show structure and bias, requiring investigation
+  - Two specific cartridges are showing difficulty in having slopes that align with the rest of the residuals (.300 Blackout and .233 Remington)
+
+---
+
+## Cartridge behavior investigations
+
+### Proceedure
+After noticing that two of the cartridges were showing bias and heterescedastic residuals I paused further iteration development and revisited each cartridge using my earlier OLS model, train/testing with each core numerical feature and their combinations.
+
+### Results of investigation
+Each test resulted in MAE values that were identical to the other cartridges' MAEs, and the residual plots all showed homoscedasticity without any perceivable bias. Only when all cartridges were evaluated together did the residuals start to again display structure and bias.
+
+### Interpretation of results:
+Each cartridge was being modeled correctly in its own specific manifold. The residual structures and bias were being introduced by the model in an attempt to fit multiple manifolds together onto one cohesive slope.
+- Next steps are to introduce interactions within the model to attempt to realign the slopes of the oddball cartridges
+
+---
+
+## Baseline 07 - Introduction of feature interactions
+
+**Notebook:** `baseline_07_interactions.ipynb`
+
+### Purpose
+- This iteration will try to restore model integrity by adding feature interactions.
+
+### Scope
+- All previously-used features will remain present in this iteration
+- Addition of two new features
+
+### Model7
+velocity_fps ~ charge_weight + bullet_weight + burn_rate_index + cartridge + (charge_weightx223_rem) + (charge_weightx300_blk)
+
+### Interpretation notes
+- Adding the two interactions based on charge_weight has fixed the slope alignment issue of the .300 Blackout cartridge but exposed a misalignment of the intercept (net positive bias)
+- The interactions opened up the structure of the .223 Remington residuals but did not correct the slope alignment problem
+- Next iteration will include interactions for the two cartridges with burn_rate_index
 
 ---
 
