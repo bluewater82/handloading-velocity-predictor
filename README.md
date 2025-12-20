@@ -158,11 +158,11 @@ The current model is frozen and serves as the reference implementation for futur
 
 ## Repository Structure
 
-- baselines # diagnostic and exploratory models
+- baselines
+- data
 - models
-- v1_global_tree # final global model
-- v1_300blk # planned sub-model
-- reports # analysis and summaries
+  - v1_global_tree
+  - v1_300blk
 
 ---
 
