@@ -169,4 +169,8 @@ The current model is frozen and serves as the reference implementation for futur
 ## License & Data
 
 This project uses publicly available manufacturer data.  
+<<<<<<< HEAD
 No proprietary load data is included.
+=======
+No proprietary load data is included.
+>>>>>>> d77f9a3d20ce8f3086279693623e93d499fe9382
